@@ -1,3 +1,3 @@
 # Maui
 
-![introduction](./images/intro.svg)
+![introduction](images/intro.png)
