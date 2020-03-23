@@ -5,6 +5,8 @@ const LOWEST_HABITABLE_TEMP = 273.15 - 15.5;
 const HIGHEST_HABITABLE_TEMP = 273.15 + 34.4;
 const SAMPLE_RATE = 200;
 const ALTITUDE_TEMP_DECREASE = 1.5 / 0.3 / 20000;
+const SIZE = 1024;
+const HEAT_RATE_MAX = 1000000;
 
 function distance(coordsA, coordsB) {
     let radicand = 0;
@@ -202,16 +204,15 @@ function findHeatRate(heatmap) {
     return maximize(
         normalRangeHabitability,
         0,
-        1000000,
+        HEAT_RATE_MAX,
         heatmap);
 }
 
-let size = 1024;
 console.log("Generating heightmap...");
-let heights = makeNoise(size);
+let heights = makeNoise(SIZE);
 
 console.log("Creating heightmap image...");
-let outImg = new PNG({width: size, height: size});
+let outImg = new PNG({width: SIZE, height: SIZE});
 outImg.data = gridToImgData(heights);
 console.log("Saving heightmap image...");
 outImg.pack()
@@ -222,7 +223,7 @@ outImg.pack()
 
 console.log("Calculating heatmap...");
 let heats = makeHeatmap(heights);
-let heatImg = new PNG({width: size, height: size});
+let heatImg = new PNG({width: SIZE, height: SIZE});
 heatImg.data = heatmapToImgData(heats);
 heatImg.pack()
   .pipe(fs.createWriteStream(__dirname + '/heatmap.png'))
